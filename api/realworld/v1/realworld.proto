@@ -1,0 +1,250 @@
+syntax = "proto3";
+
+package realworld.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "kratos-realworld/api/realworld/v1;v1";
+
+// The greeting service definition.
+service RealWorld {
+  rpc Login(LoginRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post: "/api/users/login",
+      body: "*",
+    };
+  }
+
+  rpc Registration(RegistrationRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post: "/api/users",
+      body: "*",
+    };
+  }
+
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (UserReply) {
+    option (google.api.http) = {
+      get: "/api/user",
+    };
+  }
+
+  rpc UpdateUser(UpdateUserRequest) returns (UserReply) {
+    option (google.api.http) = {
+      put: "/api/user",
+      body: "*",
+    };
+  }
+
+  rpc GetProfile(GetProfileRequest) returns (ProfileReply) {
+    option (google.api.http) = {
+      get: "/api/profiles/{username}",
+      body: "*"
+    };
+  }
+
+  rpc FollowUser(FollowUserRequest) returns (ProfileReply) {
+    option (google.api.http) = {
+      post: "/api/profiles/{username}/follow",
+      body: "*",
+    };
+  }
+
+  rpc UnfollowUser(UnfollowUserRequest) returns (ProfileReply) {
+    option (google.api.http) = {
+      delete: "/api/profiles/{username}/follow",
+      body: "*",
+    };
+  }
+
+  rpc ListArticles(ListArticlesRequest) returns (MultipleArticlesReply) {
+    option (google.api.http) = {
+      get: "/api/articles"
+    };
+  }
+
+  rpc FeedArticles(FeedArticlesRequest) returns (MultipleArticlesReply) {
+    option (google.api.http) = {
+      get: "/api/articles/feed"
+    };
+  }
+
+
+}
+
+message GetCurrentUserRequest {}
+
+message UpdateUserRequest {
+
+  message User {
+    string email = 1;
+    string bio = 2;
+    string image = 3;
+  }
+
+  User user = 1;
+}
+
+message GetProfileRequest {
+  string username = 1;
+}
+
+message FollowUserRequest {
+  string username = 1;
+}
+
+message UnfollowUserRequest {
+  string username = 1;
+}
+
+message ListArticlesRequest {
+  string tag = 1;
+  string author = 2;
+  string favorited = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message FeedArticlesRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+
+
+
+message UserReply {
+
+  message User {
+    string email = 1;
+    string token = 2;
+    string username = 3;
+    string bio = 4;
+    string image = 5;
+  }
+
+  User user = 1;
+}
+
+message ProfileReply {
+
+  message Profile {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  Profile profile = 1;
+}
+
+message SingleArticleReply{
+
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message ArticleReply {
+    string slug = 1;
+    string title = 2;
+    string description = 3;
+    string body = 4;
+    repeated string tagList = 5;
+    string createdAt = 6;
+    string updatedAt = 7;
+    bool favorited = 8;
+    uint32 favoritesCount = 9;
+    Author author = 10;
+  }
+
+  Article article = 1;
+}
+
+message MultipleArticlesReply {
+
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Articles {
+    string slug = 1;
+    string title = 2;
+    string description = 3;
+    string body = 4;
+    repeated string tagList = 5;
+    string createdAt = 6;
+    string updatedAt = 7;
+    bool favorited = 8;
+    uint32 favoritesCount = 9;
+    Author author = 10;
+  }
+
+  repeated Articles articles = 1;
+  uint32 articlesCount = 2;
+}
+
+message SingleCommentReply {
+
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Comment {
+    uint32 id = 1;
+    string createdAt = 2;
+    string updatedAt = 3;
+    string body = 4;
+    Author author = 5;
+  }
+
+  Comment comment = 1;
+}
+
+message MultipleCommentsReply {
+
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Comments {
+    uint32 id = 1;
+    string createdAt = 2;
+    string updatedAt = 3;
+    string body = 4;
+    Author author = 5;
+  }
+
+  repeated Comments comments = 1;
+}
+
+message TagListReply {
+  repeated string tags = 1;
+}
+
+message LoginRequest {
+  message User {
+    string email = 1;
+    string password = 2;
+  }
+  User user = 1;
+}
+
+message RegistrationRequest {
+  message User {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+  }
+  User user = 1;
+}
