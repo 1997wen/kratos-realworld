@@ -68,6 +68,31 @@ service RealWorld {
     };
   }
 
+  rpc GetArticle(GetArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      get: "/api/articles/{slug}"
+    };
+  }
+
+  rpc CreateArticle(CreateArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      post: "/api/articles",
+      body: "*"
+    };
+  }
+
+  rpc UpdateArticle(UpdateArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      put: "/api/articles/{slug}",
+      body: "*"
+    };
+  }
+
+  rpc DeleteArticle(DeleteArticleRequest) returns (SingleCommentReply) {
+    option (google.api.http) = {
+      delete: "/api/articles/:slug",
+    };
+  }
 
 }
 
@@ -108,6 +133,50 @@ message FeedArticlesRequest {
   int32 limit = 1;
   int32 offset = 2;
 }
+
+message GetArticleRequest {
+  string slug = 1;
+}
+
+message CreateArticleRequest {
+
+  message Article {
+    string title = 1;
+    string description = 2;
+    string body = 3;
+    repeated string tagList = 4;
+  }
+
+  Article article = 1;
+}
+
+message UpdateArticleRequest {
+  message Article {
+    string title = 1;
+  }
+
+  Article article = 1;
+  string slug = 2;
+}
+
+message DeleteArticleRequest {
+  string slug = 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -159,7 +228,7 @@ message SingleArticleReply{
     Author author = 10;
   }
 
-  Article article = 1;
+  ArticleReply article = 1;
 }
 
 message MultipleArticlesReply {
