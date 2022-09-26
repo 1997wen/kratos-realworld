@@ -37,8 +37,7 @@ service RealWorld {
 
   rpc GetProfile(GetProfileRequest) returns (ProfileReply) {
     option (google.api.http) = {
-      get: "/api/profiles/{username}",
-      body: "*"
+      get: "/api/profiles/{username}"
     };
   }
 
@@ -51,8 +50,7 @@ service RealWorld {
 
   rpc UnfollowUser(UnfollowUserRequest) returns (ProfileReply) {
     option (google.api.http) = {
-      delete: "/api/profiles/{username}/follow",
-      body: "*",
+      delete: "/api/profiles/{username}/follow"
     };
   }
 
@@ -91,6 +89,44 @@ service RealWorld {
   rpc DeleteArticle(DeleteArticleRequest) returns (SingleCommentReply) {
     option (google.api.http) = {
       delete: "/api/articles/:slug",
+    };
+  }
+
+  rpc AddArticle(AddArticleRequest) returns (SingleCommentReply) {
+    option (google.api.http) = {
+      post: "/api/articles/{slug}/comments",
+      body: "*"
+    };
+  }
+
+  rpc GetComments(GetCommentsRequest) returns (MultipleCommentsReply) {
+    option (google.api.http) = {
+      get: "/api/articles/{slug}/comments",
+    };
+  }
+
+  rpc DeleteComment(DeleteCommentRequest) returns (SingleCommentReply) {
+    option (google.api.http) = {
+      delete: "/api/articles/{slug}/comments/{id}",
+    };
+  }
+
+  rpc FavoriteArticle(FavoriteArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      post: "/api/articles/{slug}/favorite",
+      body: "*",
+    };
+  }
+
+  rpc UnfavoriteArticle(UnfavoriteArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      delete: "/api/articles/{slug}/favorite",
+    };
+  }
+
+  rpc GetTags(GetTagsRequest) returns (TagListReply) {
+    option (google.api.http) = {
+      get: "/api/tags",
     };
   }
 
@@ -163,23 +199,33 @@ message DeleteArticleRequest {
   string slug = 1;
 }
 
+message AddArticleRequest {
+  message Comment {
+    string body = 1;
+  }
 
+  Comment comment = 1;
+  string slug = 2;
+}
 
+message GetCommentsRequest {
+  string slug = 1;
+}
 
+message DeleteCommentRequest {
+  string slug = 1;
+  int32 id = 2;
+}
 
+message FavoriteArticleRequest {
+  string slug = 1;
+}
 
+message UnfavoriteArticleRequest {
+  string slug = 1;
+}
 
-
-
-
-
-
-
-
-
-
-
-
+message GetTagsRequest {}
 
 message UserReply {
 
